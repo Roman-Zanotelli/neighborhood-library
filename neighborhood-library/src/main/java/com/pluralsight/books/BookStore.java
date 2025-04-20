@@ -27,7 +27,7 @@ public class BookStore {
     public boolean checkInBook(int id) {
         return inventory.stream().anyMatch(book -> book.checkInIf(id)); //this will short circuit on the first valid book (this would break if multiple books are allowed to share id, but could be fixed by checking the checkedOutTO for the book to match the person checking it in)
     }
-    public boolean checkOutBook(int id, String checkOutTo){
-        return inventory.stream().anyMatch(book -> book.checkOutIf(id, checkOutTo)); //this will short circuit on the first valid book
+    public boolean checkOutBook(int id){
+        return inventory.stream().anyMatch(book -> book.checkOutIf(id)); //this will short circuit on the first valid book
     }
 }

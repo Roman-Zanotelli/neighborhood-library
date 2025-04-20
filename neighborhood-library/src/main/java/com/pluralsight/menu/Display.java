@@ -5,6 +5,7 @@ import com.pluralsight.books.Book;
 //todo: in general it might be useful to create a "pretty string class" or use an external lib to format the string colors in a more readable/maintainable way (currently though I just do raw ANSI codes inside the strings)
 class Display { //used for displaying information to the user
     static class MainMenu {
+
         private static String build(Menu.Option[] modes) { //builds the menu string
             final StringBuilder internal_builder = new StringBuilder();
             internal_builder.append("\u001B[1m").append("Main Menu:").append("\u001B[0m\n");
@@ -21,6 +22,7 @@ class Display { //used for displaying information to the user
         static void print(Menu.Option[] modes) { //prints the menu string from buildMenu()
             System.out.print(build(modes));
         }
+
     }
 
     static class Prompt {
@@ -29,9 +31,9 @@ class Display { //used for displaying information to the user
             System.out.print("Enter Selection: ");
         }
 
-        static void checkExit(String message) {
+        static void cOrX(String header, String messageC, String messageX) {
             //this prints the formatted prompt for the C/X menu for both chek in and check out, the message is changed through the message variable allowing any function that need C/X options to use this function the same
-            System.out.printf("\t\u001B[30m\u001B[47mC\u001B[0m - \u001B[1m\u001B[4m%s\u001B[0m\n\t\u001B[30m\u001B[47mX\u001B[0m - \u001B[1m\u001B[4mMain Menu\u001B[0m\n", message);
+            System.out.printf("\n\u001B[1m%s\u001B[0m\n\t\u001B[30m\u001B[47mC\u001B[0m - \u001B[1m\u001B[4m%s\u001B[0m\n\t\u001B[30m\u001B[47mX\u001B[0m - \u001B[1m\u001B[4m%s\u001B[0m\n", header, messageC, messageX);
         }
 
         public static void bookID() {
@@ -43,7 +45,7 @@ class Display { //used for displaying information to the user
         }
 
         public static void enterToContinue() {
-            System.out.print("\n\t\u001B[1m\u001B[4mPress Enter to Continue\u001B[0m\n");
+            System.out.print("\n\u001B[1m\u001B[4mPress Enter to Continue\u001B[0m\n");
         }
     }
 
@@ -59,37 +61,49 @@ class Display { //used for displaying information to the user
             printCheckAlertFormatted("CHECK OUT");
         }
 
-        public static void successOrFail(boolean success) { //prints Success!/Failed! based on the input bool
-            if(success) System.out.println("\u001B[32mSuccess!\u001B[0m"); else  System.out.println("\u001B[31mFailed!\u001B[0m");
+        public static void successOrFail(boolean success, String successMessage, String failMessage) { //prints Success!/Failed! based on the input bool
+            if(success) System.out.printf("\u001B[32m%s\u001B[0m\n", successMessage); else  System.out.printf("\u001B[33m%s\u001B[0m\n", failMessage);
         }
 
         public static void listBooks(Book[] books){
             for(Book book : books){ //loop through each
-                System.out.println(book.toString()); // print them out using the toString() method
+                 printBook(book);
             }
         }
+
+        public static void printBook(Book book){
+            System.out.println(book.toString());
+        }
+
         public static boolean noBooksFound(int len){
             if (len == 0){
-                System.out.println("NO BOOKS FOUND"); //todo: replace with a Display.Alert
+                System.out.println("\u001B[33mNO BOOKS FOUND\u001B[0m");
                 Scan.Prompt.enterToContinueAndClear();
                 return true; //exit back to main menu early
             }
             return false;
         }
-        public static void loading(){
+
+        public static void loading(){ //todo: experiment with load times for a smoother feel
+
             try {
                 System.out.print("\n\t\u001B[1m\u001B[4mLoading\u001B[0m ");
+                Thread.sleep(111);
                 System.out.print(". ");
-                Thread.sleep(333);
+                Thread.sleep(444);
                 System.out.print(". ");
-                Thread.sleep(666);
+                Thread.sleep(777);
                 System.out.print(".");
-                Thread.sleep(999);
+                Thread.sleep(111);
+
             }catch (Exception ignored){}
+
             System.out.print("\n\n");
 
+        }
 
-
+        public static void bookFound() {
+            System.out.println("Book Found: ");
         }
     }
 

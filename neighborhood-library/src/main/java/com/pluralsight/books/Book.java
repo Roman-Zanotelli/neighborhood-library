@@ -1,5 +1,7 @@
 package com.pluralsight.books;
 
+import com.pluralsight.menu.Scan;
+
 public class Book {
     private int id;
     private String isbn, title, checkedOutTo;
@@ -65,20 +67,25 @@ public class Book {
     }
 
     public boolean checkInIf(int id) {
-        if (this.id == id && isCheckedOut) { //check if the book id exists and if it's checked out (a book cant be checked in twice)
-            this.isCheckedOut = false;
-            this.checkedOutTo = "";
-            return true; //return success
-        }
-        return false; //return fail
+        if (!(this.id == id && isCheckedOut && Scan.Prompt.confirmBook(this))) return false; //check if the book id exists and if it's checked out (a book cant be checked in twice)
+
+        this.isCheckedOut = false;
+        this.checkedOutTo = "";
+
+        return true; //return success
+
     }
 
-    public boolean checkOutIf(int id, String checkOutTo) {
-        if (this.id == id && !isCheckedOut) { //check if the book id exists and if it's checked in (a book cant be checked out twice)
-            this.isCheckedOut = true;
-            this.checkedOutTo = checkOutTo;
-            return true; //return success
-        }
-        return false; //return fail
+    public boolean checkOutIf(int id) { //todo: replace this method with something that return the book if the id matches and handle the name prompt elsewhere inside SCAN
+        if (!(this.id == id && !isCheckedOut && Scan.Prompt.confirmBook(this))) return false;  //check if the book id exists and if it's checked in (a book cant be checked out twice)
+
+        String name = Scan.Prompt.checkOutName();
+        if (name.isBlank()) return false;
+
+        this.isCheckedOut = true;
+        this.checkedOutTo = name;
+        return true; //return success
+
+
     }
 }
